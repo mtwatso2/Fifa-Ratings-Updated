@@ -112,6 +112,8 @@ links4.sort()
 for l in links4:
     print(l) 
     
+print(nxt4)    
+    
 standard4, shooting4, passing4, misc4, pos4, defense4 = f.get_data(links)
 
 standard4, shooting4, passing4, misc4, pos4, defense4 = f.clean_all(standard4, shooting4, passing4,
