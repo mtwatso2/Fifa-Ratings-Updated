@@ -9,6 +9,7 @@ import requests
 import lxml.html as lh
 import pandas as pd
 import numpy as np
+from bs4 import BeautifulSoup, Comment
 
 
 def get_all_links(url, league=True):
@@ -57,7 +58,7 @@ def get_all_links(url, league=True):
     return ls2, nex
 
 
-def scraper(url):
+def scraper(url, league = True):
     '''
     This function takes a URL and returns a datafrme from it
     
@@ -65,19 +66,35 @@ def scraper(url):
     ----------
     url : str
         URL to a specific Football Reference data table  
+    league : bool
+        Default 'True'; data is stored differently for League vs International competitions, need to scrape differently
 
     Returns
     -------
     df : DataFrame
         A DataFrame of the data from url
     '''
-    lst = pd.read_html(url, header=1)
-    df = lst[0]
+    if league == True:
+        lst = pd.read_html(url, header=1)
+        df = lst[0]
+    else:
+        res = requests.get(url)
+        soup = BeautifulSoup(res.text, 'lxml')
+        lst = []
+        for comment in soup.find_all(string=lambda text:isinstance(text,Comment)):
+            data = BeautifulSoup(comment,"lxml")
+            for items in data.select("table tr"):
+                tds = [' '.join(item.text.split()) for item in items.select("th,td")]
+                lst.append(tds)
+    
+        df = pd.DataFrame(lst[1:])
+        df.columns = df.iloc[0]
+        df = df[1:]
     
     return df
 
 
-def get_data(lst):
+def get_data(lst, league = True):
     '''    
     This function takes a list of URLs and returns a dataframe for each URL
     
@@ -85,7 +102,9 @@ def get_data(lst):
     ----------
     lst : list
         list of URLs created from 'get_all_links' function
-
+    league : bool
+        Default 'True'; used for scraper function to select data correctly
+    
     Returns
     -------
     standard : DataFrame
@@ -101,12 +120,12 @@ def get_data(lst):
     defense : DataFrame
         Defense stats dataframe
     '''
-    standard = scraper(lst[5])
-    shooting = scraper(lst[4])
-    passing = scraper(lst[2])
-    misc = scraper(lst[1])
-    pos = scraper(lst[3])
-    defense = scraper(lst[0])
+    standard = scraper(lst[5], league)
+    shooting = scraper(lst[4], league)
+    passing  = scraper(lst[2], league)
+    misc     = scraper(lst[1], league)
+    pos      = scraper(lst[3], league)
+    defense  = scraper(lst[0], league)
     
     return standard, shooting, passing, misc, pos, defense
 
@@ -134,6 +153,7 @@ def clean_std(df, comp):
         strs = df.iloc[:, 1:6]                                      #not inclusive 
         ints = df.iloc[:, np.r_[6:11, 12:14, 15:19]].astype(float)  #not inclusive
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True)#issue with Champs league 20-21, player with missing minutes
         strs = df.iloc[:, 1:5]                                      
         ints = df.iloc[:, np.r_[5:10, 11:13, 14:18]].astype(float)
     elif comp == 'Int':
@@ -168,6 +188,7 @@ def clean_shoot(df, comp):
         strs = df.iloc[:, 1:6]       
         ints = df.iloc[:, [6, 10, 11, 17, 18]].astype(float)
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True) 
         strs = df.iloc[:, 1:5]       
         ints = df.iloc[:, [5, 9, 10, 16, 17]].replace('', np.NaN).astype(float)
     elif comp == 'Int':
@@ -207,6 +228,7 @@ def clean_pass(df, comp):
                                       'Att.1':'Att_S', 'Cmp.2':'Cmp_M', 'Att.2':'Att_M', 'Cmp.3':'Cmp_L', 
                                       'Att.3':'Att_L', '1/3':'Pas_A3'}) #different col order, rename for each compo
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True) 
         strs = df.iloc[:, 1:5]
         ints = df.iloc[:, np.r_[11:15, 16:18, 19:21, 25:29]].replace('', np.NaN).astype(float)
         data = pd.concat([strs, ints], axis=1)
@@ -245,6 +267,7 @@ def clean_misc(df, comp):
         strs = df.iloc[:, 1:6]
         ints = df.iloc[:, np.r_[11:16, 18:24]].astype(float)    
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
         ints = df.iloc[:, np.r_[10:15, 17:23]].replace('', np.NaN).astype(float)
     elif comp == 'Int':
@@ -286,6 +309,7 @@ def clean_pos(df, comp):
                                       'PrgDist':'Cr_PrgDist', 'Prog':'Cr_Prog', '1/3':'Cr_A3',
                                       'Prog.1':'Prog_Pas_Rec'})   
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
         ints = df.iloc[:, np.r_[8:17, 18:30, 31]].replace('', np.NaN).astype(float)
         data = pd.concat([strs, ints], axis=1)
@@ -330,6 +354,7 @@ def clean_def(df, comp):
                                       'Mid 3rd.1':'Pr_M3', 'Att 3rd.1':'Pr_A3', 'Sh':'Blk_Sh',
                                       'Pass':'Blk_Pass'})
     elif comp == 'Club Cup':
+        df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
         ints = df.iloc[:, np.r_[9:14, 16:19, 20:28, 29:31]].replace('', np.NaN).astype(float)     
         data = pd.concat([strs, ints], axis=1)
