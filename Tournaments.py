@@ -10,8 +10,6 @@ url = 'https://fbref.com/en/comps/19/2103/2018-2019-Europa-League-Stats'
 
 links_europa, nex = f.get_all_links(url, league = False)
 
-links_europa.sort()
-
 for l in links_europa:
     print(l) 
 
@@ -39,8 +37,6 @@ europa18_19.to_csv('europa18_19.csv', index=False)
 ##### Europa League 2019-2020 #####
 links_europa2, nex2 = f.get_all_links(nex, league = False)
 
-links_europa2.sort()
-
 for l in links_europa2:
     print(l) 
 
@@ -67,8 +63,6 @@ europa19_20.to_csv('europa19_20.csv', index=False)
 
 ##### Europa League 2020-2021 #####
 links_europa3, nex3 = f.get_all_links(nex2, league = False)
-
-links_europa3.sort()
 
 for l in links_europa3:
     print(l) 
@@ -100,8 +94,6 @@ url_champ = 'https://fbref.com/en/comps/8/2102/2018-2019-Champions-League-Stats'
 
 links_champ, nex_c = f.get_all_links(url_champ, league = False)
 
-links_champ.sort()
-
 for l in links_champ:
     print(l)
 
@@ -130,8 +122,6 @@ champ18_19.to_csv('champ18_19.csv', index=False)
 ##### Champions League 2019-2020 #####
 links_champ2, nex_c2 = f.get_all_links(nex_c, league = False)
 
-links_champ2.sort()
-
 for l in links_champ2:
     print(l)
     
@@ -159,8 +149,6 @@ champ19_20.to_csv('champ19_20.csv', index=False)
 
 ##### Champions League 2020-2021 #####
 links_champ3, nex_c3 = f.get_all_links(nex_c2, league = False)
-
-links_champ3.sort()
 
 for l in links_champ3:
     print(l)
@@ -192,8 +180,6 @@ champ20_21.to_csv('champ20_21.csv', index=False)
 url = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
 
 links_ec, nex_ec = f.get_all_links(url, league = False)
-
-links_ec.sort()
 
 for l in links_ec:
     print(l)
@@ -228,8 +214,6 @@ url = 'https://fbref.com/en/comps/685/Copa-America-Stats'
 
 links_ca, nex = f.get_all_links(url, league = False)
 
-links_ca.sort()
-
 for l in links_ca:
     print(l)
     
@@ -258,4 +242,29 @@ ca_2021.to_csv('copa_america_2021.csv', index = False)
 
 
 
+##### 2018 World Cup #####
+url = 'https://fbref.com/en/comps/1/FIFA-World-Cup-Stats'
 
+links_wc, nex_wc = f.get_all_links(url, league=False)
+
+for l in links_wc:
+    print(l)
+
+print(nex_wc)
+
+st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.get_data(links_wc, league = False)
+
+st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.clean_all(st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc, comp='Int') 
+
+wc_2018 = f.merge_all(st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc)
+
+wc_2018 = f.edit_pos(wc_2018)
+
+wc_2018 = wc_2018.rename(columns={'Squad':'Nation'})
+wc_2018['Nation'] = wc_2018['Nation'].str.split().str[1] 
+
+wc_2018 = f.dup_players(wc_2018)
+
+wc_2018.isnull().sum().sum()
+
+wc_2018.to_csv('world_cup_2018.csv', index = False)
