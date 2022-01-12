@@ -55,6 +55,8 @@ def get_all_links(url, league=True):
         x = 'https://fbref.com' + i
         ls2.append(x)
         
+    ls2.sort() #links come in different order everytime code is ran, sort alphabetically for ease
+        
     return ls2, nex
 
 
@@ -157,6 +159,7 @@ def clean_std(df, comp):
         strs = df.iloc[:, 1:5]                                      
         ints = df.iloc[:, np.r_[5:10, 11:13, 14:18]].astype(float)
     elif comp == 'Int':
+        df = df.replace('', '0') # issue with 2018 WC data
         strs = df.iloc[:, 1:4]
         ints = df.iloc[:, np.r_[4:9, 10:12, 13:17]].astype(float) #different columns for each competition type
         
@@ -192,6 +195,7 @@ def clean_shoot(df, comp):
         strs = df.iloc[:, 1:5]       
         ints = df.iloc[:, [5, 9, 10, 16, 17]].replace('', np.NaN).astype(float)
     elif comp == 'Int':
+        df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
         ints = df.iloc[:, [4, 8, 9, 15, 16]].replace('', np.NaN).astype(float)
         
@@ -235,6 +239,7 @@ def clean_pass(df, comp):
         data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Pas_TotDist', 'Pas_PrgDist', 'Cmp_S', 'Att_S', 
                         'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'KP', 'Pas_A3','PPA', 'CrsPA']
     elif comp == 'Int':
+        df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
         ints = df.iloc[:, np.r_[10:14, 15:17, 18:20, 24:28]]
         data = pd.concat([strs, ints], axis=1)
@@ -271,6 +276,7 @@ def clean_misc(df, comp):
         strs = df.iloc[:, 1:5]
         ints = df.iloc[:, np.r_[10:15, 17:23]].replace('', np.NaN).astype(float)
     elif comp == 'Int':
+        df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
         ints = df.iloc[:, np.r_[9:14, 16:22]].replace('', np.NaN).astype(float)
         
@@ -317,6 +323,7 @@ def clean_pos(df, comp):
                         'Tch_AP', 'Live', 'Dr_Succ', 'Dr_Att', 'Num_Dr_Past', 'Megs','Carries', 'Cr_TotDist', 
                         'Cr_PrgDist', 'Cr_Prog', 'Cr_A3', 'CPA', 'Mis', 'Dis', 'Targ', 'Rec', 'Prog_Pas_Rec']
     elif comp == 'Int':
+        df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]   
         ints = df.iloc[:, np.r_[7:16, 17:29, 30]].replace('', np.NaN).astype(float)
         data = pd.concat([strs, ints], axis=1)
@@ -362,6 +369,7 @@ def clean_def(df, comp):
                         'Tkl_A3', 'Tkl_VD', 'Past', 'Press', 'Press_Succ', 'Pr_D3', 'Pr_M3',
                         'Pr_A3', 'Blocks', 'Blk_Sh', 'ShSv', 'Blk_Pass', 'Int', 'Clr', 'Err']
     elif comp == 'Int':
+        df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]  
         ints = df.iloc[:, np.r_[8:13, 15:18, 19:27, 28:30]].replace('', np.NaN).astype(float)
         data = pd.concat([strs, ints], axis=1)
@@ -544,5 +552,8 @@ def dup_players(data):
             print("These rows are for players who have the same name: ")
             for i, v in vc.iteritems():
                 print(i, v) 
+    else:
+        print('No Duplicate Players in the data')
+        df = data
     
     return df
