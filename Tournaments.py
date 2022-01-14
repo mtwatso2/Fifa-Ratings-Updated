@@ -8,14 +8,9 @@ import fifa_funcs as f
 ##### Europa League 2018-2019 #####
 url = 'https://fbref.com/en/comps/19/2103/2018-2019-Europa-League-Stats'
 
-links_europa, nex = f.get_all_links(url, league = False)
+links_europa = f.get_all_links(url, lst = [], league = False)
 
-for l in links_europa:
-    print(l) 
-
-print(nex)
-    
-standard, shooting, passing, misc, pos, defense = f.get_data(links_europa, league = False)
+standard, shooting, passing, misc, pos, defense = f.get_data(links_europa[0], league = False)
 
 standard, shooting, passing, misc, pos, defense = f.clean_all(standard, shooting, passing, misc, 
                                                               pos, defense, comp = 'Club Cup')
@@ -35,14 +30,7 @@ europa18_19.to_csv('europa18_19.csv', index=False)
 
 
 ##### Europa League 2019-2020 #####
-links_europa2, nex2 = f.get_all_links(nex, league = False)
-
-for l in links_europa2:
-    print(l) 
-
-print(nex2)
-
-standard2, shooting2, passing2, misc2, pos2, defense2 = f.get_data(links_europa2, league = False) 
+standard2, shooting2, passing2, misc2, pos2, defense2 = f.get_data(links_europa[1], league = False) 
 
 standard2, shooting2, passing2, misc2, pos2, defense2 = f.clean_all(standard2, shooting2, passing2, misc2,
                                                                     pos2, defense2, comp = 'Club Cup')
@@ -62,14 +50,7 @@ europa19_20.to_csv('europa19_20.csv', index=False)
 
 
 ##### Europa League 2020-2021 #####
-links_europa3, nex3 = f.get_all_links(nex2, league = False)
-
-for l in links_europa3:
-    print(l) 
-
-print(nex3)
-
-standard3, shooting3, passing3, misc3, pos3, defense3 = f.get_data(links_europa3, league = False) 
+standard3, shooting3, passing3, misc3, pos3, defense3 = f.get_data(links_europa[2], league = False) 
 
 standard3, shooting3, passing3, misc3, pos3, defense3 = f.clean_all(standard3, shooting3, passing3, misc3,
                                                                     pos3, defense3, comp = 'Club Cup')
@@ -89,17 +70,12 @@ europa20_21.to_csv('europa20_21.csv', index=False)
 
 
 
-##### Champions League 2018-2019 ##### (NO qualifying rounds)
+##### Champions League 2018-2019 ##### 
 url_champ = 'https://fbref.com/en/comps/8/2102/2018-2019-Champions-League-Stats'
 
-links_champ, nex_c = f.get_all_links(url_champ, league = False)
+links_champ = f.get_all_links(url_champ, lst = [], league = False)
 
-for l in links_champ:
-    print(l)
-
-print(nex_c)
-
-standard_cl, shooting_cl, passing_cl, misc_cl, pos_cl, defense_cl = f.get_data(links_champ, league = False)    
+standard_cl, shooting_cl, passing_cl, misc_cl, pos_cl, defense_cl = f.get_data(links_champ[0], league = False)    
 
 standard_cl, shooting_cl, passing_cl, misc_cl, pos_cl, defense_cl = f.clean_all(standard_cl, shooting_cl, passing_cl, 
                                                                                 misc_cl, pos_cl, defense_cl, 
@@ -120,14 +96,7 @@ champ18_19.to_csv('champ18_19.csv', index=False)
 
 
 ##### Champions League 2019-2020 #####
-links_champ2, nex_c2 = f.get_all_links(nex_c, league = False)
-
-for l in links_champ2:
-    print(l)
-    
-print(nex_c2)
-
-standard_cl2, shooting_cl2, passing_cl2, misc_cl2, pos_cl2, defense_cl2 = f.get_data(links_champ2, league = False)
+standard_cl2, shooting_cl2, passing_cl2, misc_cl2, pos_cl2, defense_cl2 = f.get_data(links_champ[1], league = False)
     
 standard_cl2, shooting_cl2, passing_cl2, misc_cl2, pos_cl2, defense_cl2 = f.clean_all(standard_cl2, shooting_cl2,
                                                                                       passing_cl2, misc_cl2, pos_cl2, 
@@ -148,14 +117,7 @@ champ19_20.to_csv('champ19_20.csv', index=False)
 
 
 ##### Champions League 2020-2021 #####
-links_champ3, nex_c3 = f.get_all_links(nex_c2, league = False)
-
-for l in links_champ3:
-    print(l)
-
-print(nex_c3)
-
-standard_cl3, shooting_cl3, passing_cl3, misc_cl3, pos_cl3, defense_cl3 = f.get_data(links_champ3, league = False)
+standard_cl3, shooting_cl3, passing_cl3, misc_cl3, pos_cl3, defense_cl3 = f.get_data(links_champ[2], league = False)
     
 standard_cl3, shooting_cl3, passing_cl3, misc_cl3, pos_cl3, defense_cl3 = f.clean_all(standard_cl3, shooting_cl3,
                                                                                       passing_cl3, misc_cl3, pos_cl3, 
@@ -177,16 +139,11 @@ champ20_21.to_csv('champ20_21.csv', index=False)
 
 
 ##### 2021 Euro Cup #####
-url = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
+url_ec = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
 
-links_ec, nex_ec = f.get_all_links(url, league = False)
+links_ec = f.get_all_links(url_ec, lst = [], league = False)
 
-for l in links_ec:
-    print(l)
-    
-print(nex_ec)
-
-standard_EC, shooting_EC, passing_EC, misc_EC, pos_EC, defense_EC = f.get_data(links_ec, league = False)
+standard_EC, shooting_EC, passing_EC, misc_EC, pos_EC, defense_EC = f.get_data(links_ec[0], league = False)
 
 standard_EC, shooting_EC, passing_EC, misc_EC, pos_EC, defense_EC = f.clean_all(standard_EC, shooting_EC, 
                                                                                 passing_EC, misc_EC, pos_EC, 
@@ -210,16 +167,11 @@ ec_2021.to_csv('euro_cup_2021.csv', index=False)
 
 
 ##### 2021 Copa America #####
-url = 'https://fbref.com/en/comps/685/Copa-America-Stats'
+url_ca = 'https://fbref.com/en/comps/685/Copa-America-Stats'
 
-links_ca, nex = f.get_all_links(url, league = False)
+links_ca = f.get_all_links(url_ca, lst= [], league = False)
 
-for l in links_ca:
-    print(l)
-    
-print(nex)
-
-standard_CA, shooting_CA, passing_CA, misc_CA, pos_CA, defense_CA = f.get_data(links_ca, league = False)
+standard_CA, shooting_CA, passing_CA, misc_CA, pos_CA, defense_CA = f.get_data(links_ca[0], league = False)
 
 standard_CA, shooting_CA, passing_CA, misc_CA, pos_CA, defense_CA = f.clean_all(standard_CA, shooting_CA, 
                                                                                 passing_CA, misc_CA, pos_CA, 
@@ -243,14 +195,9 @@ ca_2021.to_csv('copa_america_2021.csv', index = False)
 
 
 ##### 2018 World Cup #####
-url = 'https://fbref.com/en/comps/1/FIFA-World-Cup-Stats'
+url_wc = 'https://fbref.com/en/comps/1/FIFA-World-Cup-Stats'
 
-links_wc, nex_wc = f.get_all_links(url, league=False)
-
-for l in links_wc:
-    print(l)
-
-print(nex_wc)
+links_wc = f.get_all_links(url_wc, lst = [], league=False)
 
 st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.get_data(links_wc, league = False)
 
