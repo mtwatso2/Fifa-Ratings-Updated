@@ -12,7 +12,7 @@ import numpy as np
 from bs4 import BeautifulSoup, Comment
 
 
-def get_all_links(url, league=True):
+def get_all_links(url, lst=[], league=True):
     '''
     This funciton takes a URL and returns a list of URLs as well as a URL to next years homepage
     
@@ -20,15 +20,15 @@ def get_all_links(url, league=True):
     ----------
     url : str
         a URL to the homepage of a Football Reference season/tournament
+    lst : list
+        a empty list that the output will be sent to
     league: bool
         Default True, used to select correct URLs for given years data
         
     Returns
     -------
-    ls2 : list
-        list of URLs of desired data tables 
-    nex : str
-        link to next seasons/tournaments home page
+    lst : list
+        list of lists of URLs of desired data tables, with each sublist corresponding to one year 
     '''
     page = requests.get(url)
     doc = lh.fromstring(page.content)
@@ -56,8 +56,14 @@ def get_all_links(url, league=True):
         ls2.append(x)
         
     ls2.sort() #links come in different order everytime code is ran, sort alphabetically for ease
+    
+    lst.append(ls2)
+    
+    if nex:
+        get_all_links(nex, lst, league) #recursively call function to get links for following year if it exists
         
-    return ls2, nex
+    return lst
+
 
 
 def scraper(url, league = True):
@@ -241,7 +247,7 @@ def clean_pass(df, comp):
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, np.r_[10:14, 15:17, 18:20, 24:28]]
+        ints = df.iloc[:, np.r_[10:14, 15:17, 18:20, 24:28]].replace('', np.NaN).astype(float)
         data = pd.concat([strs, ints], axis=1)
         data.columns = ['Player', 'Pos', 'Squad', 'Pas_TotDist', 'Pas_PrgDist','Cmp_S', 'Att_S', 
                         'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'KP', 'Pas_A3','PPA', 'CrsPA']
