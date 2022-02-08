@@ -517,6 +517,8 @@ def edit_pos(data):
     return df
 '''This function checks to see if there are duplicate rows for the same player(s)'''
 
+
+
 def dup_players(data):
     '''
     This function checks a dataframe for a given season/tournament for duplciate players and fixes them
@@ -563,3 +565,71 @@ def dup_players(data):
         df = data
     
     return df
+
+
+
+def add_dfs(df1, df2, df2_type):
+    '''
+    This function concatenates two dataframes (df1 and df2), using df2_type to determine which columns
+    to merge on 
+
+    Parameters
+    ----------
+    df1 : DataFrame
+        A DataFrame containing soccer stats 
+    df2 : TYPE
+        A DataFrame containing soccer stats
+    df2_type : string
+        What type of competition df2 is (Club tournament or Country tournament)
+
+    Returns
+    -------
+    data : DataFrame
+        df1 and df2 merged together
+
+    '''
+    cols = df1[['Player', 'Nation', 'Pos', 'Squad', 'Comp', 'Age', 'Born']] 
+                                                                                   
+    df1 = df1.drop(['Nation', 'Pos', 'Squad', 'Comp', 'Age'], axis=1)                 
+    
+    if df2_type == 'Club':
+        df2 = df2.drop(['Age', 'Nation', 'Pos', 'Squad'], axis=1)
+    elif df2_type == 'Country':
+        df2 = df2.drop(['Age', 'Pos', 'Nation'], axis=1)
+        
+    df = df1.set_index(['Player', 'Born']).add(df2.set_index(['Player', 'Born']), fill_value=0).reset_index()
+    
+    print('There are {} players out of {} possible present in both datsets'.format(len(df2) - (len(df) - len(df1)), len(df2)))
+
+    data = cols.merge(df, on=['Player', 'Born'])
+    
+    return data
+
+        
+
+def add_all(df_list, type_list):
+    '''
+    This function adds multiple DataFrames together (from df_list) using the corresponding string per df
+    from type_list to determine which columns to merge on 
+
+    Parameters
+    ----------
+    df_list : list
+        List of DataFrames to be merged
+    type_list : TYPE
+        List of competition types, first df in df_list does not need type 
+
+    Returns
+    -------
+    data : TYPE
+        DESCRIPTION.
+
+    '''
+    length = len(df_list)
+    
+    data = df_list[0]
+    
+    for i in range(length-1):
+        data = add_dfs(data, df_list[i+1], type_list[i])
+        
+    return data
