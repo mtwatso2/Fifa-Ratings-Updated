@@ -568,6 +568,144 @@ def dup_players(data):
 
 
 
+def get_headers(url):
+    '''
+    Returns a list of tuples of column names and an empty list for values from the given url
+
+    Parameters
+    ----------
+    url : string
+        URL to a fifaindex page containing player ratings
+
+    Returns
+    -------
+    cols : list
+        list of tuples of column name and empty list to be filled with data
+    '''
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'lxml')
+    table = soup.find('table')
+    table_data = table.find_all('tr')[3:] #first three rows are empty, so skip them
+    
+    cols=[] #empty list     
+    for td in table_data[0].find_all('td')[1:]: #first column is just picture of player, can skip
+        cols.append((td['data-title'], [])) #creating tuples for each column, with lists for values for each
+        
+    return cols
+    
+
+
+def scrape_fut(url, last, cols, j=2):
+    '''
+    Puts data from page 'url' into 'cols' and continues recursively until the 'last' url, using j as page index
+
+    Parameters
+    ----------
+    url : string
+        The first page to get data from
+    last : string
+        The last page to get data from
+    cols : list
+        list of tuples created with 'get_headers' function
+    j : int, optional
+        Used for increasing url page number for recursiveness. The default is 2.
+
+    Returns
+    -------
+    cols : list
+        list of tuples with coumn names and lists of data
+    '''
+    print('Getting data from {}'.format(url))
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'lxml')
+    table = soup.find('table')
+    table_data = table.find_all('tr')
+    
+    i=0
+    
+    for row in table_data:
+        tds = row.find_all('td')[1:]
+    
+        if len(tds) == 0: #random empty rows in table, just skip them
+            pass
+        else:
+            i=0
+            if tds[-1].has_attr('data-title'): #deals with issue with no 'Team' 
+                for td in tds:
+                    if td['data-title'] == 'Nationality' or td['data-title'] == 'Team': #these are images, we want title
+                        cols[i][1].append(td.find('a').get('title')) #title
+                        i += 1
+                    else:
+                        cols[i][1].append(td.text)
+                        i += 1
+            else:
+                pass #skip the player with no team available
+              
+    if url != last: #want to keep going until 'last' page is scraped
+        url2 = url.split('=')[0] + '={}'.format(j) #increasing page number by 1
+        j += 1
+        scrape_fut(url2, last, cols, j)
+                  
+    return cols
+
+
+
+def clean_fut(lst):
+    '''
+    Takes a list of tuples and returns a dataframe. Also edits 'Team' column and splits the 'OVR / POT' column
+
+    Parameters
+    ----------
+    lst : list
+        list of tuples created by 'scrape_fut' and 'get_header' functions
+
+    Returns
+    -------
+    df : DataFrame
+        A DataFrame containing FIFA player ratings for a given FIFA game
+    '''
+    Dict = {title:column for (title,column) in lst}
+    df = pd.DataFrame(Dict)
+    
+    df[['Team', 'Year']] = df['Team'].str.split(' FIFA ', expand=True) 
+    df['Overall'] = df['OVR / POT'].str[:2] #first 2 characters of string are overall
+    df['Potential'] = df['OVR / POT'].str[2:] #second 2 characters are potential
+    
+    df = df.drop('OVR / POT', axis=1) #can remove now that two new columns are created
+    
+    df = df[['Name', 'Age', 'Nationality', 'Team', 'Preferred Positions', 'Overall', 'Potential', 'Year']] #reorder columns
+    df[['Age', 'Overall', 'Potential']] = df[['Age', 'Overall', 'Potential']].astype(int) #change column types
+    
+    return df
+
+
+
+def get_fut(url, last, j=2):
+    '''
+    Scrapes data from first 'url' to 'last' url and returns a DataFrame
+
+    Parameters
+    ----------
+    url : string
+        First page of data to be scraped
+    last : TYPE
+        Last page of data to be scraped
+    j : int, optional
+        Used for increasing page number of 'url'. The default is 2.
+
+    Returns
+    -------
+    df : DataFrame
+        A DataFrame containing FIFA player ratings for a given FIFA game
+    '''
+    cols = get_headers(url)
+    dlst = scrape_fut(url, last, cols, j)
+    df   = clean_fut(dlst)
+    
+    return df
+
+
+
 def add_dfs(df1, df2, df2_type):
     '''
     This function concatenates two dataframes (df1 and df2), using df2_type to determine which columns
