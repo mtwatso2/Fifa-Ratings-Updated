@@ -9,5 +9,6 @@ Real life data from fbref.com, FIFA Player rating data from fifaindex.com
 - Tournament.py: code for getting game day for Club (Europa and Champions League) and International (Euro Cup and Copa America) Tournaments
 - Ratings.py: code for getting FIFA player rating
 - merge.py: code for merging all data together to be used for analysis
+- fut_data.csv: data created from merge.py
 - Big Five Data: Folder containing data generated from BigFive.py
 - Tournament Data: Folder containing data generated from Tournament.py
