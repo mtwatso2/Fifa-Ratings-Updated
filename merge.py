@@ -100,7 +100,7 @@ fut21 = pd.merge(data_1920, f21, how='left', left_on=['Player', 'Nation'],
 fut21.drop(['Name', 'Code'], axis=1, inplace=True)
 
 
-##### 2020-2021 Data #####
+### FIFA 22 ###
 d20_21 = pd.read_csv('data20_21.csv')
 c20_21 = pd.read_csv('champ20_21.csv')
 e20_21 = pd.read_csv('europa20_21.csv')
