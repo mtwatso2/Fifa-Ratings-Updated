@@ -11,7 +11,7 @@ Real life data from fbref.com, FIFA Player rating data from fifaindex.com
 - merge.py: code for merging all data together to be used for analysis
 - fut_data.csv: data created from merge.py, used in fifa.ipynd/fifa.pdf
 - Variable Descriptions.pdf: contains descriptions of all variables in fut_data.csv
-- fifa.ipynb: Jupyter Notebook containing EDA and models
-- fifa.pdf: pdf version of Jupyter Notebook 
+- FIFA.ipynb: Jupyter Notebook containing EDA and models
+- FIFA.pdf: pdf version of Jupyter Notebook 
 - Big Five Data: Folder containing data generated from BigFive.py
 - Tournament Data: Folder containing data generated from Tournament.py
