@@ -133,4 +133,19 @@ data['Game'] = data['Year'].astype(int).astype('category')
 
 data.drop('Year', axis=1, inplace=True)
 
+
+### FIFA 23 ###
+d21_22 = pd.read_csv('data21_22.csv')
+c21_22 = pd.read_csv('champ21_22.csv')
+e21_22 = pd.read_csv('europa21_22.csv') 
+
+d21 = [d21_22, c21_22, e21_22]
+t21 = ['Club', 'Club']
+
+data_2122 = f.add_all(d21, t21)
+
+#Since FIFA 23 is not out yet, I will use data from 2021-2022 to predict ratings for FIFA 23
+
+data_2122.to_csv('fifa23_preds.csv')
+
 #data.to_csv('fut_data.csv', index=False)
