@@ -98,3 +98,24 @@ data20_21 = f.dup_players(data20_21)
 data20_21.isna().sum().sum()
 
 data20_21.to_csv('data20_21.csv', index=False)
+
+
+##### Data for 2021-2022 season #####
+standard5, shooting5, passing5, misc5, pos5, defense5 = f.get_data(links[4])
+
+standard5, shooting5, passing5, misc5, pos5, defense5 = f.clean_all(standard5, shooting5, passing5,
+                                                                    misc5, pos5, defense5, comp = 'League')
+
+data21_22 = f.merge_all(standard5, shooting5, passing5, misc5, pos5, defense5) 
+
+data21_22 = f.edit_pos(data21_22) 
+
+data21_22['Nation'] = data21_22['Nation'].str.split().str[1]
+
+data21_22['Comp'] = data21_22['Comp'].str.split(' ', 1).str[1]
+
+data21_22 = f.dup_players(data21_22) 
+
+data21_22.isna().sum().sum()
+
+data21_22.to_csv('data21_22.csv', index=False)
