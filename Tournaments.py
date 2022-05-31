@@ -69,6 +69,26 @@ europa20_21.isna().sum().sum()
 europa20_21.to_csv('europa20_21.csv', index=False)
 
 
+##### Europa League 2021-2022 #####
+standard4, shooting4, passing4, misc4, pos4, defense4 = f.get_data(links_europa[3], league = False) 
+
+standard4, shooting4, passing4, misc4, pos4, defense4 = f.clean_all(standard4, shooting4, passing4, misc4,
+                                                                    pos4, defense4, comp = 'Club Cup')
+
+europa21_22 = f.merge_all(standard4, shooting4, passing4, misc4, pos4, defense4)
+
+europa21_22 = f.edit_pos(europa21_22)
+
+europa21_22['Nation'] = europa21_22['Nation'].str.split().str[1] 
+europa21_22['Squad'] = europa21_22['Squad'].str.split().str[1]
+
+europa21_22 = f.dup_players(europa21_22)
+
+europa21_22.isna().sum().sum()
+
+europa21_22.to_csv('europa21_22.csv', index=False)
+
+
 
 ##### Champions League 2018-2019 ##### 
 url_champ = 'https://fbref.com/en/comps/8/2102/2018-2019-Champions-League-Stats'
@@ -135,6 +155,27 @@ champ20_21 = f.dup_players(champ20_21)
 champ20_21.isna().sum().sum()
 
 champ20_21.to_csv('champ20_21.csv', index=False)
+
+
+##### Champions League 2021-2022 #####
+standard_cl4, shooting_cl4, passing_cl4, misc_cl4, pos_cl4, defense_cl4 = f.get_data(links_champ[3], league = False)
+    
+standard_cl4, shooting_cl4, passing_cl4, misc_cl4, pos_cl4, defense_cl4 = f.clean_all(standard_cl4, shooting_cl4,
+                                                                                      passing_cl4, misc_cl4, pos_cl4, 
+                                                                                      defense_cl4, comp='Club Cup')
+
+champ21_22 = f.merge_all(standard_cl4, shooting_cl4, passing_cl4, misc_cl4, pos_cl4, defense_cl4)
+
+champ21_22 = f.edit_pos(champ21_22)
+
+champ21_22['Nation'] = champ21_22['Nation'].str.split().str[1] 
+champ21_22['Squad'] = champ21_22['Squad'].str.split().str[1]
+
+champ21_22 = f.dup_players(champ21_22)
+
+champ21_22.isna().sum().sum()
+
+champ21_22.to_csv('champ21_22.csv', index=False)
 
 
 
