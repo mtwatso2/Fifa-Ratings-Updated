@@ -127,12 +127,6 @@ fut22 = pd.merge(data_2021, f22, how='left', left_on=['Player', 'Nation'],
 
 fut22.drop(['Name', 'Code'], axis=1, inplace=True)
 
-data = pd.concat([fut19, fut20, fut21, fut22], ignore_index=True)
-
-data['Game'] = data['Year'].astype(int).astype('category')
-
-data.drop('Year', axis=1, inplace=True)
-
 
 ### FIFA 23 ###
 d21_22 = pd.read_csv('data21_22.csv')
@@ -144,8 +138,27 @@ t21 = ['Club', 'Club']
 
 data_2122 = f.add_all(d21, t21)
 
-#Since FIFA 23 is not out yet, I will use data from 2021-2022 to predict ratings for FIFA 23
+fifa23 = pd.read_csv('fifa23.csv')
 
-data_2122.to_csv('fifa23_preds.csv')
+fifa23['Nationality'].replace(code_mapper, inplace=True)
 
-#data.to_csv('fut_data.csv', index=False)
+fifa23 = fifa23[['Name', 'Nationality', 'Overall', 'Year']]
+
+f23 = pd.merge(fifa23, cc, how='left', left_on='Nationality', right_on='Country')
+
+f23 = f23[['Name', 'Overall', 'Year', 'Code']]
+
+fut23 = pd.merge(data_2122, f23, how='left', left_on=['Player', 'Nation'], 
+                 right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
+
+fut23.drop(['Name', 'Code'], axis=1, inplace=True)
+
+
+## Adding it all together ##
+data = pd.concat([fut19, fut20, fut21, fut22, fut23], ignore_index=True)
+
+data['Game'] = data['Year'].astype(int).astype('category')
+
+data.drop('Year', axis=1, inplace=True)
+
+data.to_csv('FUT_data.csv', index=False)
