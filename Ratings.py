@@ -50,3 +50,15 @@ last_22 = 'https://www.fifaindex.com/players/fifa22_490/?page=618'
 df22 = f.get_fut(url_22, last_22)
 
 df22.to_csv('fifa22.csv', index=False)
+
+
+
+########## FIFA 2023 Data ##########
+ 
+url_23 = 'https://www.fifaindex.com/players/fifa23_558/?page=1'      #September 28 2022  
+
+last_23 = 'https://www.fifaindex.com/players/fifa23_558/?page=613'
+
+df23 = f.get_fut(url_23, last_23)
+
+df23.to_csv('fifa23.csv', index=False)
