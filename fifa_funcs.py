@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: MWatson717
+
 """
 
 #This file contains functions used for the project
@@ -21,14 +22,14 @@ def get_all_links(url, lst=[], league=True):
     url : str
         a URL to the homepage of a Football Reference season/tournament
     lst : list
-        a empty list that the output will be sent to
+        a list that the output will be sent to
     league: bool
         Default True, used to select correct URLs for given years data
         
     Returns
     -------
     lst : list
-        list of lists of URLs of desired data tables, with each sublist corresponding to one year 
+        a list containing lists of links for each year (may only be one list)
     '''
     page = requests.get(url)
     doc = lh.fromstring(page.content)
@@ -56,7 +57,7 @@ def get_all_links(url, lst=[], league=True):
         ls2.append(x)
         
     ls2.sort() #links come in different order everytime code is ran, sort alphabetically for ease
-    
+        
     lst.append(ls2)
     
     if nex:
@@ -102,6 +103,7 @@ def scraper(url, league = True):
     return df
 
 
+
 def get_data(lst, league = True):
     '''    
     This function takes a list of URLs and returns a dataframe for each URL
@@ -136,6 +138,7 @@ def get_data(lst, league = True):
     defense  = scraper(lst[0], league)
     
     return standard, shooting, passing, misc, pos, defense
+
 
 
 def clean_std(df, comp):
@@ -174,6 +177,7 @@ def clean_std(df, comp):
     return data
 
 
+
 def clean_shoot(df, comp):
     '''
     This funcion cleans the 'Shooting' data table from Football Reference
@@ -209,6 +213,7 @@ def clean_shoot(df, comp):
     data = data.rename(columns = {'Dist':'Avg_Sh_Dist'}) #rename column regardless of comp type
     
     return data
+
 
 
 def clean_pass(df, comp):
@@ -255,6 +260,7 @@ def clean_pass(df, comp):
     return data  
 
 
+
 def clean_misc(df, comp):
     '''
     This funcion cleans the 'Defense' data table from Football Reference
@@ -290,6 +296,7 @@ def clean_misc(df, comp):
     data = data.rename(columns = {'Won':'AD_Won', 'Lost':'AD_Lost'})
     
     return data
+
 
 
 def clean_pos(df, comp):
@@ -339,6 +346,7 @@ def clean_pos(df, comp):
     return data
 
 
+
 def clean_def(df, comp):
     '''
     This funcion cleans the 'Defense' data table from Football Reference
@@ -384,6 +392,7 @@ def clean_def(df, comp):
                         'Pr_A3', 'Blocks', 'Blk_Sh', 'ShSv', 'Blk_Pass', 'Int', 'Clr', 'Err']
         
     return data
+
 
 
 def clean_all(d1, d2, d3, d4, d5, d6, comp):
@@ -515,7 +524,6 @@ def edit_pos(data):
     df = data.replace(positions, new)   #changing position values 
     
     return df
-'''This function checks to see if there are duplicate rows for the same player(s)'''
 
 
 
@@ -565,6 +573,26 @@ def dup_players(data):
         df = data
     
     return df
+
+def check_dupes(df):
+    '''
+    This function checks to see if players in df with same name also have same birth year
+
+    Parameters
+    ----------
+    df : DataFrame
+        DataFrame containing stats for a single season 
+
+    Returns
+    -------
+    None.
+    '''
+    vc = df.Player.value_counts()
+    vc = vc[vc > 1].reset_index()
+    lst = list(vc['index'])
+    for i in lst:
+        print(df[df.Player == i][['Player', 'Born', 'Nation']])
+        print('\n')
 
 
 
