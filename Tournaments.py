@@ -3,7 +3,7 @@
 @author: MWatson717
 """
 
-import fifa_funcs_2623 as f
+import fifa_funcs as f
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4') #to ignore warning about using a list of links
