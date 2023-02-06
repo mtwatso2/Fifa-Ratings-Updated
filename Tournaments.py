@@ -3,12 +3,16 @@
 @author: MWatson717
 """
 
-import fifa_funcs as f
+import fifa_funcs_2623 as f
+
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='bs4') #to ignore warning about using a list of links
+
 
 ##### Europa League 2018-2019 #####
 url = 'https://fbref.com/en/comps/19/2103/2018-2019-Europa-League-Stats'
 
-links_europa = f.get_all_links(url, lst = [], league = False)
+links_europa = f.get_all_links(url, lst=[], league = False)
 
 standard, shooting, passing, misc, pos, defense = f.get_data(links_europa[0], league = False)
 
@@ -93,7 +97,7 @@ europa21_22.to_csv('europa21_22.csv', index=False)
 ##### Champions League 2018-2019 ##### 
 url_champ = 'https://fbref.com/en/comps/8/2102/2018-2019-Champions-League-Stats'
 
-links_champ = f.get_all_links(url_champ, lst = [], league = False)
+links_champ = f.get_all_links(url_champ, lst=[], league = False)
 
 standard_cl, shooting_cl, passing_cl, misc_cl, pos_cl, defense_cl = f.get_data(links_champ[0], league = False)    
 
@@ -182,7 +186,7 @@ champ21_22.to_csv('champ21_22.csv', index=False)
 ##### 2021 Euro Cup #####
 url_ec = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
 
-links_ec = f.get_all_links(url_ec, lst = [], league = False)
+links_ec = f.get_all_links(url_ec, lst=[], league = False)
 
 standard_EC, shooting_EC, passing_EC, misc_EC, pos_EC, defense_EC = f.get_data(links_ec[0], league = False)
 
@@ -201,7 +205,7 @@ ec_2021 = f.dup_players(ec_2021)
 
 ec_2021 = ec_2021.fillna(0)
 
-ec_2021.isnull().sum().sum() #just missing values (141) from avg shot distance, fill with 0
+ec_2021.isnull().sum().sum() 
 
 ec_2021.to_csv('euro_cup_2021.csv', index=False)
 
@@ -210,7 +214,7 @@ ec_2021.to_csv('euro_cup_2021.csv', index=False)
 ##### 2021 Copa America #####
 url_ca = 'https://fbref.com/en/comps/685/Copa-America-Stats'
 
-links_ca = f.get_all_links(url_ca, lst= [], league = False)
+links_ca = f.get_all_links(url_ca, lst=[], league = False)
 
 standard_CA, shooting_CA, passing_CA, misc_CA, pos_CA, defense_CA = f.get_data(links_ca[0], league = False)
 
@@ -236,13 +240,13 @@ ca_2021.to_csv('copa_america_2021.csv', index = False)
 
 
 ##### 2018 World Cup #####
-url_wc = 'https://fbref.com/en/comps/1/FIFA-World-Cup-Stats'
+url_wc = 'https://fbref.com/en/comps/1/2018/2018-World-Cup-Stats' 
 
-links_wc = f.get_all_links(url_wc, lst = [], league=False)
+links_wc = f.get_all_links(url_wc, [], league=False)
 
-st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.get_data(links_wc, league = False)
+st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.get_data(links_wc[0], league = False)
 
-st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.clean_all(st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc, comp='Int') 
+st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc = f.clean_all(st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc, comp='Int')
 
 wc_2018 = f.merge_all(st_wc, sh_wc, pa_wc, mi_wc, po_wc, df_wc)
 
@@ -256,3 +260,24 @@ wc_2018 = f.dup_players(wc_2018)
 wc_2018.isnull().sum().sum()
 
 wc_2018.to_csv('world_cup_2018.csv', index = False)
+
+
+
+##### 2022 World Cup #####
+st_wc22, sh_wc22, pa_wc22, mi_wc22, po_wc22, df_wc22 = f.get_data(links_wc[1], league = False)
+
+st_wc22, sh_wc22, pa_wc22, mi_wc22, po_wc22, df_wc22 = f.clean_all(st_wc22, sh_wc22, pa_wc22, mi_wc22,
+                                                                   po_wc22, df_wc22, comp='Int', is22=True) 
+
+wc_2022 = f.merge_all(st_wc22, sh_wc22, pa_wc22, mi_wc22, po_wc22, df_wc22)
+
+wc_2022 = f.edit_pos(wc_2022)
+
+wc_2022 = wc_2022.rename(columns={'Squad':'Nation'})
+wc_2022['Nation'] = wc_2022['Nation'].str.split().str[1] 
+
+wc_2022 = f.dup_players(wc_2022)
+
+wc_2022.isnull().sum().sum()
+
+wc_2022.to_csv('world_cup_2022.csv', index = False)
