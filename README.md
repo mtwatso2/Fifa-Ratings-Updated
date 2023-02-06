@@ -9,7 +9,7 @@ Real life data from fbref.com, FIFA Player rating data from fifaindex.com
 - Tournament.py: code for getting game data for Club (Europa and Champions League) and International (Euro Cup, Copa America and World Cup) Tournaments
 - Ratings.py: code for getting FIFA player ratings
 - merge.py: code for merging all data together to be used for analysis
-- fut_data.csv: data created from merge.py, used in fifa.ipynd/fifa.pdf and Fifa 23 Update; contains data through the 2021-2022 season
+- FUT_data.csv: data created from merge.py, used in fifa.ipynd/fifa.pdf and Fifa 23 Update; contains data through the 2021-2022 season
 - Variable Descriptions.pdf: contains descriptions of all variables in fut_data.csv
 - FIFA.ipynb: Jupyter Notebook containing EDA and models
 - FIFA.pdf: pdf version of Jupyter Notebook 
