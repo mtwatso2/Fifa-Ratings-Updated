@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 @author: MWatson717
-
 """
 
 #This file contains functions used for the project
@@ -42,7 +41,7 @@ def get_all_links(url, lst=[], league=True):
         pass
     
     if league == True:    #Need this to be able to use for league/tournament data
-        links[:] = [x for x in links if 'players' in x] #there isnt 'players' in URLs for tournmants
+        links[:] = [x for x in links if 'players' in x] #'players' is not in URLs for tournmants
         
     sub_str = ['stats', 'shooting', 'passing/', 'possession', 'defense', 'misc'] #need / in passing because theres another link for passing_types
     
@@ -162,15 +161,15 @@ def clean_std(df, comp):
     
     if comp == 'League':
         strs = df.iloc[:, 1:6]                                      #not inclusive 
-        ints = df.iloc[:, np.r_[6:11, 12:14, 15:19]].astype(float)  #not inclusive
+        ints = df.iloc[:, 6:11].astype(float)                       #not inclusive
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True)#issue with Champs league 20-21, player with missing minutes
         strs = df.iloc[:, 1:5]                                      
-        ints = df.iloc[:, np.r_[5:10, 11:13, 14:18]].astype(float)
+        ints = df.iloc[:, 5:10].astype(float)
     elif comp == 'Int':
         df = df.replace('', '0') # issue with 2018 WC data
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, np.r_[4:9, 10:12, 13:17]].astype(float) #different columns for each competition type
+        ints = df.iloc[:, 4:9].astype(float) #different columns for each competition type
         
     data = pd.concat([strs, ints], axis=1)
     
@@ -199,18 +198,20 @@ def clean_shoot(df, comp):
     
     if comp == 'League':
         strs = df.iloc[:, 1:6]       
-        ints = df.iloc[:, [6, 10, 11, 17, 18]].astype(float)
+        ints = df.iloc[:, np.r_[9:12, 17:21]].astype(float)
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True) 
         strs = df.iloc[:, 1:5]       
-        ints = df.iloc[:, [5, 9, 10, 16, 17]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[8:11, 16:20]].astype(float)
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, [4, 8, 9, 15, 16]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[7:10, 15:19]].astype(float)
         
     data = pd.concat([strs, ints], axis=1)
     data = data.rename(columns = {'Dist':'Avg_Sh_Dist'}) #rename column regardless of comp type
+    
+    data.loc[data['SoT'] == 0, 'Avg_Sh_Dist'] = 0 #fixing issue where average shot distance is null
     
     return data
 
@@ -237,25 +238,24 @@ def clean_pass(df, comp):
     
     if comp == 'League':
         strs = df.iloc[:, 1:6]
-        ints = df.iloc[:, np.r_[12:16, 17:19, 20:22, 26:30]].astype(float)
+        ints = df.iloc[:, np.r_[9:11, 12:16, 17:19, 20:22, 23, 27:32]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data = data.rename(columns = {'TotDist':'Pas_TotDist', 'PrgDist':'Pas_PrgDist', 'Cmp.1':'Cmp_S', 
-                                      'Att.1':'Att_S', 'Cmp.2':'Cmp_M', 'Att.2':'Att_M', 'Cmp.3':'Cmp_L', 
-                                      'Att.3':'Att_L', '1/3':'Pas_A3'}) #different col order, rename for each compo
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Comp', 'Cmp', 'Att', 'Pass_TD', 'Pass_PD', 'Cmp_S',
+                        'Att_S', 'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'Ast', 'KP', 'Pas_A3', 'PPA', 'CrsPA', 'PrgP']
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True) 
         strs = df.iloc[:, 1:5]
-        ints = df.iloc[:, np.r_[11:15, 16:18, 19:21, 25:29]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[8:10, 11:15, 16:18, 19:21, 22, 26:31]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Pas_TotDist', 'Pas_PrgDist', 'Cmp_S', 'Att_S', 
-                        'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'KP', 'Pas_A3','PPA', 'CrsPA']
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Cmp', 'Att', 'Pass_TD', 'Pass_PD', 'Cmp_S', 'Att_S',
+                        'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'Ast', 'KP', 'Pas_A3', 'PPA', 'CrsPA', 'PrgP']
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, np.r_[10:14, 15:17, 18:20, 24:28]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[7:9, 10:14, 15:17, 18:20, 21, 25:30]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Pos', 'Squad', 'Pas_TotDist', 'Pas_PrgDist','Cmp_S', 'Att_S', 
-                        'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'KP', 'Pas_A3','PPA', 'CrsPA']
+        data.columns = ['Player', 'Pos', 'Squad', 'Cmp', 'Att', 'Pass_TD', 'Pass_PD', 'Cmp_S', 'Att_S',
+                        'Cmp_M', 'Att_M', 'Cmp_L', 'Att_L', 'Ast', 'KP', 'Pas_A3', 'PPA', 'CrsPA', 'PrgP']
 
     return data  
 
@@ -281,16 +281,16 @@ def clean_misc(df, comp):
     df = df.replace(',', '', regex=True) 
     
     if comp == 'League':
-        strs = df.iloc[:, 1:6]
-        ints = df.iloc[:, np.r_[11:16, 18:24]].astype(float)    
+        strs = df.iloc[:, 1:6]  
+        ints = df.iloc[:, np.r_[9:16, 18:24]].astype(float)
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
-        ints = df.iloc[:, np.r_[10:15, 17:23]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[8:15, 17:23]].astype(float)
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, np.r_[9:14, 16:22]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[7:14, 16:22]].astype(float)
         
     data = pd.concat([strs, ints], axis=1)
     data = data.rename(columns = {'Won':'AD_Won', 'Lost':'AD_Lost'})
@@ -320,29 +320,28 @@ def clean_pos(df, comp):
     
     if comp == 'League':
         strs = df.iloc[:, 1:6]
-        ints = df.iloc[:, np.r_[9:18, 19:31, 32]].astype(float)
+        ints = df.iloc[:, np.r_[9:18, 19, 21:31]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data = data.rename(columns = {'Def Pen':'Tch_DP', 'Def 3rd':'Tch_D3', 'Mid 3rd':'Tch_M3',
-                                      'Att 3rd':'Tch_A3', 'Att Pen':'Tch_AP', 'Succ':'Dr_Succ',
-                                      'Att':'Dr_Att', '#Pl':'Num_Dr_Past','TotDist':'Cr_TotDist', 
-                                      'PrgDist':'Cr_PrgDist', 'Prog':'Cr_Prog', '1/3':'Cr_A3',
-                                      'Prog.1':'Prog_Pas_Rec'})   
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Comp', 'Touches', 'Tch_DP', 'Tch_D3', 
+                        'Tch_M3','Tch_A3', 'Tch_AP', 'Live', 'TO_Att', 'TO_Succ', 'Tkld', 'Carries', 
+                        'Carries_TD', 'Carries_PD', 'PrgC', 'Carries_A3', 'CPA', 'Mis', 'Dis', 'Rec', 'PrgR']
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
-        ints = df.iloc[:, np.r_[8:17, 18:30, 31]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[8:17, 18, 20:30]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Nation', 'Pos', 'Squad','Touches', 'Tch_DP', 'Tch_D3', 'Tch_M3','Tch_A3', 
-                        'Tch_AP', 'Live', 'Dr_Succ', 'Dr_Att', 'Num_Dr_Past', 'Megs','Carries', 'Cr_TotDist', 
-                        'Cr_PrgDist', 'Cr_Prog', 'Cr_A3', 'CPA', 'Mis', 'Dis', 'Targ', 'Rec', 'Prog_Pas_Rec']
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Touches', 'Tch_DP', 'Tch_D3', 'Tch_M3','Tch_A3', 
+                        'Tch_AP', 'Live', 'TO_Att', 'TO_Succ', 'Tkld', 'Carries', 'Carries_TD',   
+                        'Carries_PD', 'PrgC', 'Carries_A3', 'CPA', 'Mis', 'Dis', 'Rec', 'PrgR']
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]   
-        ints = df.iloc[:, np.r_[7:16, 17:29, 30]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[7:16, 17, 19:29]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Pos', 'Squad','Touches', 'Tch_DP', 'Tch_D3', 'Tch_M3','Tch_A3', 
-                        'Tch_AP', 'Live', 'Dr_Succ', 'Dr_Att', 'Num_Dr_Past', 'Megs','Carries', 'Cr_TotDist', 
-                        'Cr_PrgDist', 'Cr_Prog', 'Cr_A3', 'CPA', 'Mis', 'Dis', 'Targ', 'Rec', 'Prog_Pas_Rec']
+        data.columns = ['Player', 'Pos', 'Squad', 'Touches', 'Tch_DP', 'Tch_D3', 'Tch_M3','Tch_A3', 
+                        'Tch_AP', 'Live', 'TO_Att', 'TO_Succ', 'Tkld', 'Carries', 'Carries_TD',   
+                        'Carries_PD', 'PrgC', 'Carries_A3', 'CPA', 'Mis', 'Dis', 'Rec', 'PrgR']
+
     return data
 
 
@@ -368,28 +367,27 @@ def clean_def(df, comp):
     
     if comp == 'League':
         strs = df.iloc[:, 1:6]
-        ints = df.iloc[:, np.r_[10:15, 17:20, 21:29, 30:32]].astype(float)     
+        ints = df.iloc[:, np.r_[9:16, 17:22, 23:25]].astype(float)
         data = pd.concat([strs, ints], axis=1)                            
-        data = data.rename(columns = {'Def 3rd':'Tkl_D3', 'Mid 3rd':'Tkl_M3', 'Att 3rd':'Tkl_A3',
-                                      'Tkl.1':'Tkl_VD', 'Succ':'Press_Succ', 'Def 3rd.1':'Pr_D3',
-                                      'Mid 3rd.1':'Pr_M3', 'Att 3rd.1':'Pr_A3', 'Sh':'Blk_Sh',
-                                      'Pass':'Blk_Pass'})
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Comp', 'Tkl', 'TklW', 'Tkl_D3', 'Tkl_M3',
+                        'Tkl_A3', 'Tkl_VD_succ', 'Tkl_VD_att', 'Tkl_VD_lost', 'Blocks',
+                        'Blocked_shot', 'Blocked_pass', 'Int', 'Clr', 'Err']
     elif comp == 'Club Cup':
         df = df.replace('', '0', regex=True)
         strs = df.iloc[:, 1:5]
-        ints = df.iloc[:, np.r_[9:14, 16:19, 20:28, 29:31]].replace('', np.NaN).astype(float)     
+        ints = df.iloc[:, np.r_[8:15, 16:21, 22:24]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'TklW', 'Tkl_D3', 'Tkl_M3',
-                        'Tkl_A3', 'Tkl_VD', 'Past', 'Press', 'Press_Succ', 'Pr_D3', 'Pr_M3',
-                        'Pr_A3', 'Blocks', 'Blk_Sh', 'ShSv', 'Blk_Pass', 'Int', 'Clr', 'Err']
+        data.columns = ['Player', 'Nation', 'Pos', 'Squad', 'Tkl', 'TklW', 'Tkl_D3', 'Tkl_M3',
+                        'Tkl_A3', 'Tkl_VD_succ', 'Tkl_VD_att', 'Tkl_VD_lost', 'Blocks',
+                        'Blocked_shot', 'Blocked_pass', 'Int', 'Clr', 'Err']
     elif comp == 'Int':
         df = df.replace('', '0') 
         strs = df.iloc[:, 1:4]  
-        ints = df.iloc[:, np.r_[8:13, 15:18, 19:27, 28:30]].replace('', np.NaN).astype(float)
+        ints = df.iloc[:, np.r_[7:14, 15:20, 21:23]].astype(float)
         data = pd.concat([strs, ints], axis=1)
-        data.columns = ['Player', 'Pos', 'Squad', 'TklW', 'Tkl_D3', 'Tkl_M3',
-                        'Tkl_A3', 'Tkl_VD', 'Past', 'Press', 'Press_Succ', 'Pr_D3', 'Pr_M3',
-                        'Pr_A3', 'Blocks', 'Blk_Sh', 'ShSv', 'Blk_Pass', 'Int', 'Clr', 'Err']
+        data.columns = ['Player', 'Pos', 'Squad', 'Tkl', 'TklW', 'Tkl_D3', 'Tkl_M3',
+                        'Tkl_A3', 'Tkl_VD_succ', 'Tkl_VD_att', 'Tkl_VD_lost', 'Blocks',
+                        'Blocked_shot', 'Blocked_pass', 'Int', 'Clr', 'Err']
         
     return data
 
@@ -441,6 +439,7 @@ def clean_all(d1, d2, d3, d4, d5, d6, comp):
     return st, sh, pa, mi, po, de
 
 
+
 def merge(df1, df2):
     '''
     This function merges two dataframes on matching columns
@@ -465,6 +464,7 @@ def merge(df1, df2):
     data = pd.merge(left = df1, right = df2, how = 'inner', left_on = same, right_on = same)
     
     return data
+
 
 
 def merge_all(d1, d2, d3, d4, d5, d6):
@@ -499,6 +499,7 @@ def merge_all(d1, d2, d3, d4, d5, d6):
     data = merge(data, d6)
     
     return data
+
 
 
 def edit_pos(data):
@@ -573,6 +574,8 @@ def dup_players(data):
         df = data
     
     return df
+
+
 
 def check_dupes(df):
     '''
