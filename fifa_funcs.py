@@ -140,7 +140,7 @@ def get_data(lst, league = True):
 
 
 
-def clean_std(df, comp):
+def clean_std(df, comp, is22=False):
     '''
     This funcion cleans the 'Standard' data table from Football Reference
     
@@ -148,8 +148,11 @@ def clean_std(df, comp):
     ----------
     df : DataFrame
         Standard stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
+    is22 : bool
+        True/False: 2022 World Cup data has an additional column that is not needed, this boolean 
+        is used to filter for this specific issue 
         
     Returns
     -------
@@ -169,7 +172,10 @@ def clean_std(df, comp):
     elif comp == 'Int':
         df = df.replace('', '0') # issue with 2018 WC data
         strs = df.iloc[:, 1:4]
-        ints = df.iloc[:, 4:9].astype(float) #different columns for each competition type
+        if is22:
+            ints = df.iloc[:, np.r_[4, 6:10]].astype(float) #needed because 2022 WC has different columns
+        else:
+            ints = df.iloc[:, 4:9].astype(float) #different columns for each competition type
         
     data = pd.concat([strs, ints], axis=1)
     
@@ -185,7 +191,7 @@ def clean_shoot(df, comp):
     ----------
     df : DataFrame
         Shooting stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
 
     Returns
@@ -225,7 +231,7 @@ def clean_pass(df, comp):
     ----------
     df : DataFrame
         Passing stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
 
     Returns
@@ -269,7 +275,7 @@ def clean_misc(df, comp):
     ----------
     df : DataFrame
         Miscellaneous stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
         
     Returns
@@ -307,7 +313,7 @@ def clean_pos(df, comp):
     ----------
     df : DataFrame
         Possession stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
 
     Returns
@@ -354,7 +360,7 @@ def clean_def(df, comp):
     ----------
     df : DataFrame
         Defense stats dataframe
-    comp: str
+    comp : str
         What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
 
     Returns
@@ -393,7 +399,7 @@ def clean_def(df, comp):
 
 
 
-def clean_all(d1, d2, d3, d4, d5, d6, comp):
+def clean_all(d1, d2, d3, d4, d5, d6, comp, is22=False):
     '''
     This functions takes in 6 DFs and cleans them based on what type of competition data is from
     
@@ -412,8 +418,9 @@ def clean_all(d1, d2, d3, d4, d5, d6, comp):
     d6 : DataFrame
         Defense Stats dataframe   
     comp : str
-        What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int' 
-
+        What type of competiton data is from, options are: 'League', 'Club Cup' or 'Int'
+    is22 : Boolean 
+        2022 WC has different columns, set to TRUE only if data is for the 2022 World Cup
     Returns
     -------
     st : DataFrame
@@ -429,7 +436,7 @@ def clean_all(d1, d2, d3, d4, d5, d6, comp):
     de : DataFrame
         Cleaned Defense Stats dataframe  
     '''
-    st = clean_std(d1, comp)
+    st = clean_std(d1, comp, is22)
     sh = clean_shoot(d2, comp)
     pa = clean_pass(d3, comp)
     mi = clean_misc(d4, comp)
