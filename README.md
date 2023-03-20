@@ -16,3 +16,4 @@ Real life data from fbref.com, FIFA Player rating data from fifaindex.com
 - Big Five Data: Folder containing data generated from BigFive.py
 - Tournament Data: Folder containing data generated from Tournament.py
 - FIFA 23 update.ipynb/.pdf: models predicting 'Overall' rating using most up to date data 
+- FIFA Update Mar 2023.ipynd/.pdf: updated models for predicting 'Overall' rating using new data from FUT_data.csv
