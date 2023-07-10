@@ -10,9 +10,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module='bs4') #to ignore
 
 
 ##### Europa League 2018-2019 #####
-url = 'https://fbref.com/en/comps/19/2103/2018-2019-Europa-League-Stats'
+url_eur = 'https://fbref.com/en/comps/19/2103/2018-2019-Europa-League-Stats'
 
-links_europa = f.get_all_links(url, lst=[], league = False)
+links_europa = f.get_all_links(url_eur, lst=[], league = False)
 
 standard, shooting, passing, misc, pos, defense = f.get_data(links_europa[0], league = False)
 
@@ -91,6 +91,26 @@ europa21_22 = f.dup_players(europa21_22)
 europa21_22.isna().sum().sum()
 
 europa21_22.to_csv('europa21_22.csv', index=False)
+
+
+##### Europa League 2022-2023 #####
+standard5, shooting5, passing5, misc5, pos5, defense5 = f.get_data(links_europa[4], league = False)
+
+standard5, shooting5, passing5, misc5, pos5, defense5 = f.clean_all(standard5, shooting5, passing5, misc5,
+                                                                    pos5, defense5, comp = 'Club Cup')
+
+europa22_23 = f.merge_all(standard5, shooting5, passing5, misc5, pos5, defense5)
+
+europa22_23 = f.edit_pos(europa22_23)
+
+europa22_23['Nation'] = europa22_23['Nation'].str.split().str[1] 
+europa22_23['Squad'] = europa22_23['Squad'].str.split().str[1]
+
+europa22_23 = f.dup_players(europa22_23)
+
+europa22_23.isna().sum().sum() #no missing values 
+
+europa22_23.to_csv('europa22_23.csv', index=False)
 
 
 
@@ -182,6 +202,27 @@ champ21_22.isna().sum().sum()
 champ21_22.to_csv('champ21_22.csv', index=False)
 
 
+##### Champions League 2022-2023 #####
+standard_cl5, shooting_cl5, passing_cl5, misc_cl5, pos_cl5, defense_cl5 = f.get_data(links_champ[4], league = False)
+    
+standard_cl5, shooting_cl5, passing_cl5, misc_cl5, pos_cl5, defense_cl5 = f.clean_all(standard_cl5, shooting_cl5,
+                                                                                      passing_cl5, misc_cl5, pos_cl5, 
+                                                                                      defense_cl5, comp='Club Cup')
+
+champ22_23 = f.merge_all(standard_cl5, shooting_cl5, passing_cl5, misc_cl5, pos_cl5, defense_cl5)
+
+champ22_23 = f.edit_pos(champ22_23)
+
+champ22_23['Nation'] = champ22_23['Nation'].str.split().str[1] 
+champ22_23['Squad'] = champ22_23['Squad'].str.split().str[1]
+
+champ22_23 = f.dup_players(champ22_23)
+
+champ22_23.isna().sum().sum() # no missing values 
+
+champ22_23.to_csv('champ22_23.csv', index=False)
+
+
 
 ##### 2021 Euro Cup #####
 url_ec = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
@@ -208,6 +249,56 @@ ec_2021 = ec_2021.fillna(0)
 ec_2021.isnull().sum().sum() 
 
 ec_2021.to_csv('euro_cup_2021.csv', index=False)
+
+
+
+##### Conference League 2021-2022 #####
+url_con = 'https://fbref.com/en/comps/882/2021-2022/stats/2021-2022-Europa-Conference-League-Stats'
+
+links_con = f.get_all_links(url_con, lst=[], league = False)
+
+st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.get_data(links_con[0], league = False) 
+
+st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.clean_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl, comp = 'Club Cup')
+
+conference21_22 = f.merge_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl)
+
+conference21_22 = f.edit_pos(conference21_22)
+
+conference21_22['Nation'] = conference21_22['Nation'].str.split().str[1]
+conference21_22['Squad'] = conference21_22['Squad'].str.split().str[1]
+
+conference21_22 = f.dup_players(conference21_22)
+
+conference21_22.isna().sum().sum() #1 missing value
+
+missing = conference21_22.loc[conference21_22.isnull().sum(1) > 0]
+
+print(missing) # This player has a missing value for 'Nation'. Only 127 minutes played though, so can just drop him
+
+conference21_22 = conference21_22.dropna()
+
+conference21_22.to_csv('conference21_22', index=False)
+
+
+##### Conference League 2022-2023 #####
+st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.get_data(links_con[1], league = False) 
+
+st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.clean_all(st_cl2, sh_cl2, ps_cl2, 
+                                                              ms_cl2, pos_cl2, df_cl2, comp = 'Club Cup')
+
+conference22_23 = f.merge_all(st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2)
+
+conference22_23 = f.edit_pos(conference22_23)
+
+conference22_23['Nation'] = conference22_23['Nation'].str.split().str[1]
+conference22_23['Squad'] = conference22_23['Squad'].str.split().str[1]
+
+conference22_23 = f.dup_players(conference22_23)
+
+conference22_23.isna().sum().sum() #No missing values 
+
+conference22_23.to_csv('conference22_23', index=False)
 
 
 
