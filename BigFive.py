@@ -113,3 +113,29 @@ print(missing) # Looks like he's just mising position, but since he only has 5 m
 data21_22 = data21_22.dropna()
 
 data21_22.to_csv('data21_22.csv', index=False)
+
+
+##### Data for 2022-2023 season #####
+standard6, shooting6, passing6, misc6, pos6, defense6 = f.get_data(links[5])
+
+standard6, shooting6, passing6, misc6, pos6, defense6 = f.clean_all(standard6, shooting6, passing6, 
+                                                                    misc6, pos6, defense6, comp = 'League')
+
+data22_23 = f.merge_all(standard6, shooting6, passing6, misc6, pos6, defense6) 
+
+data22_23 = f.edit_pos(data22_23)
+
+data22_23['Nation'] = data22_23['Nation'].str.split().str[1]
+data22_23['Comp'] = data22_23['Comp'].str.split(' ', 1).str[1]
+
+data22_23 = f.dup_players(data22_23) 
+
+data22_23.isnull().sum().sum() #there's a missing value here?
+
+missing = data22_23.loc[data22_23.isnull().sum(1) > 0]
+
+print(missing) # This player has a missing value for 'Nation'. However, he only played 1 minute during the season, so not needed for analysis, can just drop
+
+data22_23 = data22_23.dropna()
+
+data22_23.to_csv('data22_23.csv', index=False)
