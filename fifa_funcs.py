@@ -12,7 +12,7 @@ import numpy as np
 from bs4 import BeautifulSoup, Comment
 
 
-def get_all_links(url, lst=[], league=True):
+def get_all_links(url, lst=[], league = True, other = False):
     '''
     This funciton takes a URL and returns a list of URLs as well as a URL to next years homepage
     
@@ -24,6 +24,8 @@ def get_all_links(url, lst=[], league=True):
         a list that the output will be sent to
     league: bool
         Default True, used to select correct URLs for given years data
+    other: bool
+        Default False, used to select correct tables from leagues with different URL formats 
         
     Returns
     -------
@@ -40,7 +42,7 @@ def get_all_links(url, lst=[], league=True):
     except:
         pass
     
-    if league == True:    #Need this to be able to use for league/tournament data
+    if league == True and other == False:    #Need this to be able to use for league/tournament data
         links[:] = [x for x in links if 'players' in x] #'players' is not in URLs for tournmants
         
     sub_str = ['stats', 'shooting', 'passing/', 'possession', 'defense', 'misc'] #need / in passing because theres another link for passing_types
@@ -51,16 +53,22 @@ def get_all_links(url, lst=[], league=True):
     
     ls2 = []
     
-    for i in ls: #added https: before URLs
-        x = 'https://fbref.com' + i
-        ls2.append(x)
-        
+    if other == True:
+        for i in ls: #added https: before URLs
+            if 'comps' in i:
+                x = 'https://fbref.com' + i
+                ls2.append(x)
+    else: 
+        for i in ls: #added https: before URLs
+            x = 'https://fbref.com' + i
+            ls2.append(x)
+            
     ls2.sort() #links come in different order everytime code is ran, sort alphabetically for ease
         
     lst.append(ls2)
     
     if nex:
-        get_all_links(nex, lst, league) #recursively call function to get links for following year if it exists
+        get_all_links(nex, lst, league, other) #recursively call function to get links for following year if it exists
         
     return lst
 
