@@ -5,7 +5,6 @@ Created on Tue Jul 11 13:56:02 2023
 @author: MWatson717
 """
 
-########################################################################################## Edited Get all links....
 import fifa_funcs_2623 as f
 
 import warnings
