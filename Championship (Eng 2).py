@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4') #to ignore warning about using a list of links
 
 
-##### Championship (Engalnd 2nd Division) 2018-2019 #####
+##### Championship (England 2nd Division) 2018-2019 #####
 url1 = 'https://fbref.com/en/comps/10/2018-2019/2018-2019-Championship-Stats'
 
 links = f.get_all_links(url1, other=True)
@@ -43,7 +43,7 @@ champ18_19.insert(6, 'Comp', 'Championship')
 champ18_19.to_csv('champ18_19.csv', index=False)
 
 
-##### Championship (Engalnd 2nd Division) 2019-2020 #####
+##### Championship (England 2nd Division) 2019-2020 #####
 st2, sh2, ps2, ms2, pos2, df2 = f.get_data(links[1], league = False) #need league = False here to get the player data instead of team 
 
 st2, sh2, ps2, ms2, pos2, df2 = f.clean_all(st2, sh2, ps2, ms2, pos2, df2, comp = 'Club Cup') #club cup because there is no 'league' variable like BIG 5 has
@@ -71,7 +71,7 @@ champ19_20.insert(6, 'Comp', 'Championship')
 champ19_20.to_csv('champ19_20.csv', index=False)
 
 
-##### Championship (Engalnd 2nd Division) 2020-2021 #####
+##### Championship (England 2nd Division) 2020-2021 #####
 st3, sh3, ps3, ms3, pos3, df3 = f.get_data(links[2], league = False) #need league = False here to get the player data instead of team 
 
 st3, sh3, ps3, ms3, pos3, df3 = f.clean_all(st3, sh3, ps3, ms3, pos3, df3, comp = 'Club Cup') #club cup because there is no 'league' variable like BIG 5 has
@@ -91,7 +91,7 @@ champ20_21.insert(6, 'Comp', 'Championship')
 champ20_21.to_csv('champ20_21.csv', index=False)
 
 
-##### Championship (Engalnd 2nd Division) 2021-2022 #####
+##### Championship (England 2nd Division) 2021-2022 #####
 st4, sh4, ps4, ms4, pos4, df4 = f.get_data(links[3], league = False) #need league = False here to get the player data instead of team 
 
 st4, sh4, ps4, ms4, pos4, df4 = f.clean_all(st4, sh4, ps4, ms4, pos4, df4, comp = 'Club Cup') #club cup because there is no 'league' variable like BIG 5 has
@@ -123,7 +123,7 @@ champ21_22.insert(6, 'Comp', 'Championship')
 champ21_22.to_csv('champ21_22.csv', index=False)
 
 
-##### Championship (Engalnd 2nd Division) 2022-2023 #####
+##### Championship (England 2nd Division) 2022-2023 #####
 st5, sh5, ps5, ms5, pos5, df5 = f.get_data(links[4], league = False) #need league = False here to get the player data instead of team 
 
 st5, sh5, ps5, ms5, pos5, df5 = f.clean_all(st5, sh5, ps5, ms5, pos5, df5, comp = 'Club Cup') #club cup because there is no 'league' variable like BIG 5 has
