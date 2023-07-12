@@ -18,3 +18,4 @@ Real life data from fbref.com, FIFA Player rating data from fifaindex.com
 - FIFA 23 update.ipynb/.pdf: models predicting 'Overall' rating using most up to date data 
 - FIFA Update Mar 2023.ipynd/.pdf: updated models for predicting 'Overall' rating using new data from FUT_data.csv
 - Portugal.py: code for getting data from the Portugal Primeira Liga (added 7/11/23)
+- Championship (Eng 2).py: code for getting data from the Championship, the second division in England (added 7/12/23)
