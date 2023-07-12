@@ -136,7 +136,7 @@ champ18_19 = f.dup_players(champ18_19)
 
 champ18_19.isna().sum().sum()
 
-champ18_19.to_csv('champ18_19.csv', index=False)
+champ18_19.to_csv('ucl18_19.csv', index=False)
 
 
 ##### Champions League 2019-2020 #####
@@ -157,7 +157,7 @@ champ19_20 = f.dup_players(champ19_20)
 
 champ19_20.isna().sum().sum()
 
-champ19_20.to_csv('champ19_20.csv', index=False)
+champ19_20.to_csv('ucl19_20.csv', index=False)
 
 
 ##### Champions League 2020-2021 #####
@@ -178,7 +178,7 @@ champ20_21 = f.dup_players(champ20_21)
 
 champ20_21.isna().sum().sum()
 
-champ20_21.to_csv('champ20_21.csv', index=False)
+champ20_21.to_csv('ucl20_21.csv', index=False)
 
 
 ##### Champions League 2021-2022 #####
@@ -199,7 +199,7 @@ champ21_22 = f.dup_players(champ21_22)
 
 champ21_22.isna().sum().sum()
 
-champ21_22.to_csv('champ21_22.csv', index=False)
+champ21_22.to_csv('ucl21_22.csv', index=False)
 
 
 ##### Champions League 2022-2023 #####
@@ -220,7 +220,7 @@ champ22_23 = f.dup_players(champ22_23)
 
 champ22_23.isna().sum().sum() # no missing values 
 
-champ22_23.to_csv('champ22_23.csv', index=False)
+champ22_23.to_csv('ucl22_23.csv', index=False)
 
 
 
