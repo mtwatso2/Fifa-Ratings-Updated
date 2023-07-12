@@ -224,6 +224,65 @@ champ22_23.to_csv('champ22_23.csv', index=False)
 
 
 
+##### Conference League 2021-2022 #####
+url_con = 'https://fbref.com/en/comps/882/2021-2022/stats/2021-2022-Europa-Conference-League-Stats'
+
+links_con = f.get_all_links(url_con, lst=[], league = False)
+
+st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.get_data(links_con[0], league = False) 
+
+st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.clean_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl, comp = 'Club Cup')
+
+conference21_22 = f.merge_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl)
+
+conference21_22 = f.edit_pos(conference21_22)
+
+conference21_22['Nation'] = conference21_22['Nation'].str.split().str[1]
+conference21_22['Squad'] = conference21_22['Squad'].str.split().str[1]
+
+conference21_22 = f.dup_players(conference21_22)  #2 missing values
+
+missing = conference21_22.loc[conference21_22.isnull().sum(1) > 0]
+
+print(missing) #2 players both missing country, lets find it
+
+conference21_22.at[383, 'Nation'] = 'KAZ' #Jurij Medvedev of club Slovan is from Kazakhstan 
+
+conference21_22.at[775, 'Nation'] = 'CZE' #Tomas Hajek of club Vitesse is from Czechia
+
+conference21_22.isna().sum().sum()
+
+conference21_22.to_csv('conference21_22.csv', index=False)
+
+
+
+##### Conference League 2022-2023 #####
+st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.get_data(links_con[1], league = False) 
+
+st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.clean_all(st_cl2, sh_cl2, ps_cl2, 
+                                                              ms_cl2, pos_cl2, df_cl2, comp = 'Club Cup')
+
+conference22_23 = f.merge_all(st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2)
+
+conference22_23 = f.edit_pos(conference22_23)
+
+conference22_23['Nation'] = conference22_23['Nation'].str.split().str[1]
+conference22_23['Squad'] = conference22_23['Squad'].str.split().str[1]
+
+conference22_23 = f.dup_players(conference22_23)
+
+conference22_23.isna().sum().sum() #No missing values 
+
+missing2 = conference22_23.loc[conference22_23.isnull().sum(1) > 0]
+
+print(missing2)
+
+conference22_23.at[399, 'Nation'] = 'KAZ' #Jurij Medvedev of club Slovan is from Kazakhstan 
+
+conference22_23.to_csv('conference22_23.csv', index=False)
+
+
+
 ##### 2021 Euro Cup #####
 url_ec = 'https://fbref.com/en/comps/676/stats/UEFA-Euro-Stats'
 
@@ -249,56 +308,6 @@ ec_2021 = ec_2021.fillna(0)
 ec_2021.isnull().sum().sum() 
 
 ec_2021.to_csv('euro_cup_2021.csv', index=False)
-
-
-
-##### Conference League 2021-2022 #####
-url_con = 'https://fbref.com/en/comps/882/2021-2022/stats/2021-2022-Europa-Conference-League-Stats'
-
-links_con = f.get_all_links(url_con, lst=[], league = False)
-
-st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.get_data(links_con[0], league = False) 
-
-st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl = f.clean_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl, comp = 'Club Cup')
-
-conference21_22 = f.merge_all(st_cl, sh_cl, ps_cl, ms_cl, pos_cl, df_cl)
-
-conference21_22 = f.edit_pos(conference21_22)
-
-conference21_22['Nation'] = conference21_22['Nation'].str.split().str[1]
-conference21_22['Squad'] = conference21_22['Squad'].str.split().str[1]
-
-conference21_22 = f.dup_players(conference21_22)
-
-conference21_22.isna().sum().sum() #1 missing value
-
-missing = conference21_22.loc[conference21_22.isnull().sum(1) > 0]
-
-print(missing) # This player has a missing value for 'Nation'. Only 127 minutes played though, so can just drop him
-
-conference21_22 = conference21_22.dropna()
-
-conference21_22.to_csv('conference21_22', index=False)
-
-
-##### Conference League 2022-2023 #####
-st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.get_data(links_con[1], league = False) 
-
-st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2 = f.clean_all(st_cl2, sh_cl2, ps_cl2, 
-                                                              ms_cl2, pos_cl2, df_cl2, comp = 'Club Cup')
-
-conference22_23 = f.merge_all(st_cl2, sh_cl2, ps_cl2, ms_cl2, pos_cl2, df_cl2)
-
-conference22_23 = f.edit_pos(conference22_23)
-
-conference22_23['Nation'] = conference22_23['Nation'].str.split().str[1]
-conference22_23['Squad'] = conference22_23['Squad'].str.split().str[1]
-
-conference22_23 = f.dup_players(conference22_23)
-
-conference22_23.isna().sum().sum() #No missing values 
-
-conference22_23.to_csv('conference22_23', index=False)
 
 
 
