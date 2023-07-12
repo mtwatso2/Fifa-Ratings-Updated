@@ -37,7 +37,9 @@ print(missing) # a quick google search shows that this player is from Brazil; in
 
 primeira18_19.at[68, 'Nation'] = 'BRA'
 
-primeira18_19.isna().sum().sum() #no more missing values 
+primeira18_19.isna().sum().sum() #no more missing values
+
+primeira18_19.insert(6, 'Comp', 'Primeira Liga')
 
 primeira18_19.to_csv('primeira18_19.csv', index=False)
 
@@ -65,6 +67,8 @@ primeira19_20.at[63, 'Nation'] = 'BRA'
 
 primeira19_20.isna().sum().sum() #fixed the missing value 
 
+primeira19_20.insert(6, 'Comp', 'Primeira Liga')
+
 primeira19_20.to_csv('primeira19_20.csv', index=False)
 
 
@@ -90,6 +94,8 @@ print(missing3)#same player as last year is missing nation again, he is index 62
 primeira20_21.at[62, 'Nation'] = 'BRA'
 
 primeira20_21.isna().sum().sum() #fixed the missing value 
+
+primeira20_21.insert(6, 'Comp', 'Primeira Liga')
 
 primeira20_21.to_csv('primeira20_21.csv', index=False)
 
@@ -117,6 +123,8 @@ primeira21_22.at[70, 'Nation'] = 'BRA'
 
 primeira21_22.isna().sum().sum() #fixed the missing value 
 
+primeira21_22.insert(6, 'Comp', 'Primeira Liga')
+
 primeira21_22.to_csv('primeira21_22.csv', index=False)
 
 
@@ -134,6 +142,8 @@ primeira22_23['Nation'] = primeira22_23['Nation'].str.split().str[1] #removing 2
 primeira22_23 = f.dup_players(primeira22_23)
 
 primeira22_23.isna().sum().sum() #No missing values 
+
+primeira22_23.insert(6, 'Comp', 'Primeira Liga')
 
 primeira22_23.to_csv('primeira22_23.csv', index=False)
 
