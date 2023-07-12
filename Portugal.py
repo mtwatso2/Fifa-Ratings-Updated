@@ -35,7 +35,7 @@ missing = primeira18_19.loc[primeira18_19.isnull().sum(1) > 0]
 
 print(missing) # a quick google search shows that this player is from Brazil; index 68
 
-primeira18_19.at[68, 'Nation'] = 'Brazil'
+primeira18_19.at[68, 'Nation'] = 'BRA'
 
 primeira18_19.isna().sum().sum() #no more missing values 
 
@@ -61,7 +61,7 @@ missing2 = primeira19_20.loc[primeira19_20.isnull().sum(1) > 0]
 
 print(missing2)#same player as last year is missing nation again, he is index 63 this year 
 
-primeira19_20.at[63, 'Nation'] = 'Brazil'
+primeira19_20.at[63, 'Nation'] = 'BRA'
 
 primeira19_20.isna().sum().sum() #fixed the missing value 
 
@@ -87,7 +87,7 @@ missing3 = primeira20_21.loc[primeira20_21.isnull().sum(1) > 0]
 
 print(missing3)#same player as last year is missing nation again, he is index 62 this year 
 
-primeira20_21.at[62, 'Nation'] = 'Brazil'
+primeira20_21.at[62, 'Nation'] = 'BRA'
 
 primeira20_21.isna().sum().sum() #fixed the missing value 
 
@@ -113,7 +113,7 @@ missing4 = primeira21_22.loc[primeira21_22.isnull().sum(1) > 0]
 
 print(missing4)#same player as last year is missing nation again, he is index 70 this year 
 
-primeira21_22.at[70, 'Nation'] = 'Brazil'
+primeira21_22.at[70, 'Nation'] = 'BRA'
 
 primeira21_22.isna().sum().sum() #fixed the missing value 
 
@@ -137,50 +137,3 @@ primeira22_23.isna().sum().sum() #No missing values
 
 primeira22_23.to_csv('primeira22_23.csv', index=False)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-1 Not getting any links at all
-Fixed this issue by looking at HTML to see that 'player' is not included, as well as needing to filter with 'comps':
-    
-links = doc.xpath('//div[@id="inner_nav"]//@href')
-sub_str = ['stats', 'shooting', 'passing/', 'possession', 'defense', 'misc']
-ls = [i for i in links if any(sub in i for sub in sub_str)]
-ls = list(set(ls))
-ls2 = []
-    
-for i in ls: #added https: before URLs
-    if 'comps' in i:                         #this fixed the issue 
-        x = 'https://fbref.com' + i
-        ls2.append(x)
-
-
-2 Not getting next year(s) data 
-Fixed issue below by adjust recursivity (needed to add 'other' to the call )        
-        
-#not getting any links from this function.... 
-import requests
-import lxml.html as lh
-
-
-page = requests.get(url1)
-doc = lh.fromstring(page.content)
-nex = doc.xpath('//div[@class="prevnext"]/a[@class="button2 next"]/@href')
-nex = 'https://fbref.com' + nex[0] #this is working correctly, and it looks like the URLS do not include player either.....
-
-3 getting team data instead of player
-had to set league=False for get data
-'''
