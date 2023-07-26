@@ -4,7 +4,7 @@
 """
 
 #Merging all data together
-import fifa_funcs as f
+import fifa_funcs_2623 as f
 import pandas as pd
 
 ### Need to get country codes since FBREF data uses these while FUT data has country name
@@ -30,7 +30,7 @@ wc = pd.read_csv('world_cup_2018.csv')
 d17 = [d17_18, wc]
 t17 = ['Country']
 
-data_1718 = f.add_all(d17, t17)
+data_1718 = f.add_all(d17, t17)     #2364 rows
 
 fifa19 = pd.read_csv('fifa19.csv')
 
@@ -45,18 +45,24 @@ f19 = f19[['Name', 'Overall', 'Year', 'Code']]
 fut19 = pd.merge(data_1718, f19, how='left', left_on=['Player', 'Nation'], 
                  right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
 
-fut19.drop(['Name', 'Code'], axis=1, inplace=True)
+fut19.drop(['Name', 'Code'], axis=1, inplace=True) #started with 2364, reduced to 1879
 
 
 ### FIFA 20 ###
-d18_19 = pd.read_csv('data18_19.csv')
-c18_19 = pd.read_csv('champ18_19.csv')
-e18_19 = pd.read_csv('europa18_19.csv')
+d18_19 = pd.read_csv('data18_19.csv')            # Big 5 Leagues (England, Spain, Italy, Germany, France)
+n18_19 = pd.read_csv('eridivisie18_19.csv')      # Netherlands Eridivisie
+p18_19 = pd.read_csv('primeira18_19.csv')        # Portugal Primeira Liga
+c18_19 = pd.read_csv('champ18_19.csv')           # England Championship (2nd division)
 
-d18 = [d18_19, c18_19, e18_19]
+all18_19 = pd.concat([d18_19, n18_19, p18_19, c18_19])  #3910 rows
+
+u18_19 = pd.read_csv('ucl18_19.csv')             # UEFA Champions League
+e18_19 = pd.read_csv('europa18_19.csv')          # UEFA Europa League 
+
+d18 = [all18_19, u18_19, e18_19]
 t18 = ['Club', 'Club']
 
-data_1819 = f.add_all(d18, t18)
+data_1819 = f.add_all(d18, t18)     #4428 rows 
 
 fifa20 = pd.read_csv('fifa20.csv')
 
@@ -71,18 +77,24 @@ f20 = f20[['Name', 'Overall', 'Year', 'Code']]
 fut20 = pd.merge(data_1819, f20, how='left', left_on=['Player', 'Nation'], 
                  right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
 
-fut20.drop(['Name', 'Code'], axis=1, inplace=True)
+fut20.drop(['Name', 'Code'], axis=1, inplace=True)  #2884 rows
 
 
 ### FIFA 21 ###
-d19_20 = pd.read_csv('data19_20.csv')
-c19_20 = pd.read_csv('champ19_20.csv')
-e19_20 = pd.read_csv('europa19_20.csv')
+d19_20 = pd.read_csv('data19_20.csv')            # Big 5 Leagues (England, Spain, Italy, Germany, France)
+n19_20 = pd.read_csv('eridivisie19_20.csv')      # Netherlands Eridivisie
+p19_20 = pd.read_csv('primeira19_20.csv')        # Portugal Primeira Liga
+c19_20 = pd.read_csv('champ19_20.csv')           # England Championship (2nd division)
 
-d19 = [d19_20, c19_20, e19_20]
+all19_20 = pd.concat([d19_20, n19_20, p19_20, c19_20])  #4006 rows
+
+u19_20 = pd.read_csv('ucl19_20.csv')             # UEFA Champions League
+e19_20 = pd.read_csv('europa19_20.csv')          # UEFA Europa League 
+
+d19 = [all19_20, u19_20, e19_20]
 t19 = ['Club', 'Club']
 
-data_1920 = f.add_all(d19, t19)
+data_1920 = f.add_all(d19, t19)     #2411 rows
 
 fifa21 = pd.read_csv('fifa21.csv')
 
@@ -97,20 +109,24 @@ f21 = f21[['Name', 'Overall', 'Year', 'Code']]
 fut21 = pd.merge(data_1920, f21, how='left', left_on=['Player', 'Nation'], 
                  right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
 
-fut21.drop(['Name', 'Code'], axis=1, inplace=True)
+fut21.drop(['Name', 'Code'], axis=1, inplace=True)  #2962 rows
 
 
 ### FIFA 22 ###
-d20_21 = pd.read_csv('data20_21.csv')
-c20_21 = pd.read_csv('champ20_21.csv')
-e20_21 = pd.read_csv('europa20_21.csv')
-euro_2021 = pd.read_csv('euro_cup_2021.csv')
-copa_2021 = pd.read_csv('copa_america_2021.csv')
+d20_21 = pd.read_csv('data20_21.csv')            # Big 5 Leagues (England, Spain, Italy, Germany, France)
+n20_21 = pd.read_csv('eridivisie20_21.csv')      # Netherlands Eridivisie
+p20_21 = pd.read_csv('primeira20_21.csv')        # Portugal Primeira Liga
+c20_21 = pd.read_csv('champ20_21.csv')           # England Championship (2nd division)
 
-d20 = [d20_21, c20_21, e20_21, euro_2021, copa_2021]
-t20 = ['Club', 'Club', 'Country', 'Country']
+all20_21 = pd.concat([d20_21, n20_21, p20_21, c20_21])  #4112 rows
 
-data_2021 = f.add_all(d20, t20)
+u20_21 = pd.read_csv('ucl20_21.csv')             # UEFA Champions League
+e20_21 = pd.read_csv('europa20_21.csv')          # UEFA Europa League 
+
+d20 = [all20_21, u20_21, e20_21]
+t20 = ['Club', 'Club']
+
+data_2021 = f.add_all(d20, t20)     #4822 rows
 
 fifa22 = pd.read_csv('fifa22.csv')
 
@@ -125,18 +141,24 @@ f22 = f22[['Name', 'Overall', 'Year', 'Code']]
 fut22 = pd.merge(data_2021, f22, how='left', left_on=['Player', 'Nation'], 
                  right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
 
-fut22.drop(['Name', 'Code'], axis=1, inplace=True)
+fut22.drop(['Name', 'Code'], axis=1, inplace=True)  #2811 rows
 
 
 ### FIFA 23 ###
-d21_22 = pd.read_csv('data21_22.csv')
-c21_22 = pd.read_csv('champ21_22.csv')
-e21_22 = pd.read_csv('europa21_22.csv') 
+d21_22 = pd.read_csv('data21_22.csv')            # Big 5 Leagues (England, Spain, Italy, Germany, France)
+n21_22 = pd.read_csv('eridivisie21_22.csv')      # Netherlands Eridivisie
+p21_22 = pd.read_csv('primeira21_22.csv')        # Portugal Primeira Liga
+c21_22 = pd.read_csv('champ21_22.csv')           # England Championship (2nd division)
 
-d21 = [d21_22, c21_22, e21_22]
+all21_22 = pd.concat([d21_22, n21_22, p21_22, c21_22])  #4235 rows
+
+u21_22 = pd.read_csv('ucl21_22.csv')             # UEFA Champions League
+e21_22 = pd.read_csv('europa21_22.csv')          # UEFA Europa League 
+
+d21 = [all21_22, u21_22, e21_22]
 t21 = ['Club', 'Club']
 
-data_2122 = f.add_all(d21, t21)
+data_2122 = f.add_all(d21, t21)     #5131 rows
 
 fifa23 = pd.read_csv('fifa23.csv')
 
@@ -151,7 +173,7 @@ f23 = f23[['Name', 'Overall', 'Year', 'Code']]
 fut23 = pd.merge(data_2122, f23, how='left', left_on=['Player', 'Nation'], 
                  right_on=['Name', 'Code']).dropna().drop_duplicates(subset=['Player']).reset_index(drop=True)
 
-fut23.drop(['Name', 'Code'], axis=1, inplace=True)
+fut23.drop(['Name', 'Code'], axis=1, inplace=True)  #2967 rows
 
 
 ## Adding it all together ##
@@ -161,4 +183,28 @@ data['Game'] = data['Year'].astype(int).astype('category')
 
 data.drop('Year', axis=1, inplace=True)
 
-data.to_csv('FUT_data.csv', index=False)
+data.to_csv('FUT_data_726.csv', index=False)
+
+
+pd.pivot_table(data, values='Player', index='Comp', columns='Game', aggfunc='count', margins=True)
+
+
+### FIFA 24 ###
+d22_23 = pd.read_csv('data22_23.csv')            # Big 5 Leagues (England, Spain, Italy, Germany, France)
+n22_23 = pd.read_csv('eridivisie22_23.csv')      # Netherlands Eridivisie
+p22_23 = pd.read_csv('primeira22_23.csv')        # Portugal Primeira Liga
+c22_23 = pd.read_csv('champ22_23.csv')           # England Championship (2nd division)
+
+all22_23 = pd.concat([d22_23, n22_23, p22_23, c22_23])  #4196 rows 
+
+u22_23 = pd.read_csv('ucl22_23.csv')             # UEFA Champions League
+e22_23 = pd.read_csv('europa22_23.csv')          # UEFA Europa League 
+
+d22 = [all22_23, u22_23, e22_23]
+t22 = ['Club', 'Club']
+
+data_2223 = f.add_all(d22, t22)     #5050 rows 
+
+#FIFA is rebranding as EA FC starting for the 2023-2024 season, might not be able to scrape data from the same source
+
+
